@@ -1,0 +1,252 @@
+using System.Collections;
+
+namespace lab9_4
+{
+    internal class Program
+    {
+        public class MusicDisk
+        {
+            private List<Song> songs;
+            private string diskName;
+
+            public MusicDisk(string n)
+            {
+                songs = new List<Song>();
+                this.diskName = n;
+            }
+
+            public string getDiskName()
+            {
+                return this.diskName;
+            }
+
+            public void addSong(Song song)
+            {
+                this.songs.Add(song);
+            }
+
+            public void deleteSong(Song song)
+            {
+                this.songs.Remove(song);
+            }
+
+            public void showAll()
+            {
+                foreach(Song s in songs)
+                {
+                    Console.WriteLine(s);
+                }
+            }
+
+            public Song findByName(string name)
+            {
+                foreach (Song s in songs)
+                {
+                    if (s.getName().Equals(name))
+                    {
+                        return s; 
+                    }
+                }
+                return null; 
+            }
+
+            public Song findByArtist(string artist)
+            {
+                foreach (Song s in songs)
+                {
+                    if (s.getArtist().Equals(artist))
+                    {
+                        return s;
+                    }
+                }
+                return null;
+            }
+
+            public List<Song> findAllByArtist(string artist)
+            {
+                List<Song> results = new List<Song>();
+                foreach (Song s in songs)
+                {
+                    if (s.getArtist().Equals(artist))
+                    {
+                        results.Add(s);
+                    }
+                }
+                return results;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is MusicDisk other)
+                    return this.diskName == other.diskName;
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return diskName.GetHashCode();
+            }
+        }
+
+        
+
+        public class Song
+        {
+            private string artist;
+            private string name;
+
+            public Song(string n, string a)
+            {
+                this.name = n;
+                this.artist = a;
+            }
+
+            public string getName()
+            {
+                return this.name;
+            }
+
+            public string getArtist()
+            {
+                return this.artist;
+            }
+
+            public override string ToString()
+            {
+                return "Song name: " + this.name + " Artist: " + this.artist;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is Song other)
+                    return this.name == other.name;
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return name.GetHashCode();
+            }
+        }
+        static void Main(string[] args)
+        {
+            Hashtable catalog = new Hashtable();
+            
+            // Dua Lipa
+            Song song1 = new Song("Levitating", "Dua Lipa");
+            Song song2 = new Song("Don't Start Now", "Dua Lipa");
+            Song song3 = new Song("New Rules", "Dua Lipa");
+            Song song4 = new Song("Physical", "Dua Lipa");
+            Song song5 = new Song("Be the One", "Dua Lipa");
+            Song song6 = new Song("Break My Heart", "Dua Lipa");
+
+            // Harry Styles
+            Song song7 = new Song("As It Was", "Harry Styles");
+            Song song8 = new Song("Watermelon Sugar", "Harry Styles");
+            Song song9 = new Song("Adore You", "Harry Styles");
+            Song song10 = new Song("Falling", "Harry Styles");
+            Song song11 = new Song("Late Night Talking", "Harry Styles");
+            Song song12 = new Song("Golden", "Harry Styles");
+
+            // The Weeknd
+            Song song13 = new Song("Blinding Lights", "The Weeknd");
+            Song song14 = new Song("Save Your Tears", "The Weeknd");
+            Song song15 = new Song("Starboy", "The Weeknd");
+            Song song16 = new Song("The Hills", "The Weeknd");
+            Song song17 = new Song("Can't Feel My Face", "The Weeknd");
+            Song song18 = new Song("Earned It", "The Weeknd");
+
+            MusicDisk md1 = new MusicDisk("MusicDisk1");
+            md1.addSong(song1);
+            md1.addSong(song5);
+            md1.addSong(song7);
+            md1.addSong(song6);
+            md1.addSong(song14);
+            md1.addSong(song17);
+
+            MusicDisk md2 = new MusicDisk("MusicDisk2");
+            md2.addSong(song11);
+            md2.addSong(song15);
+            md2.addSong(song2);
+            md2.addSong(song9);
+            md2.addSong(song10);
+            md2.addSong(song18);
+
+            MusicDisk md3 = new MusicDisk("MusicDisk3");
+            md3.addSong(song2);
+            md3.addSong(song3);
+            md3.addSong(song4);
+            md3.addSong(song8);
+            md3.addSong(song12);
+            md3.addSong(song13);
+            md3.addSong(song16);
+
+
+            //додавання дисків
+            catalog.Add("Disc 1", md1);
+            catalog.Add("Disc 2", md2);
+            catalog.Add("Disc 3", md3);
+
+            //видалення дисків
+            //catalog.Remove(md2);
+
+            showCatalog(catalog);
+            showDiskInCatalog(catalog, "Disc 1");
+            showAllSongsInCatalog(catalog, "The Weeknd");
+
+
+            
+
+
+
+
+
+
+
+
+
+        }
+
+        public static void showCatalog(Hashtable catalog)
+        {
+            Console.WriteLine("Каталог музичних дисків:");
+            foreach (DictionaryEntry entry in catalog)
+            {
+                Console.WriteLine($"\n{entry.Key}:");
+                MusicDisk disk = (MusicDisk)entry.Value;
+                disk.showAll();
+            }
+        }
+        public static void showDiskInCatalog(Hashtable catalog, string diskName)
+        {
+            Console.WriteLine("Перегляд вмісту :"+diskName);
+            if (catalog.Contains(diskName))
+            {
+                MusicDisk selectedDisk = (MusicDisk)catalog[diskName];
+                selectedDisk.showAll();
+            }
+        }
+
+        public static void showAllSongsInCatalog(Hashtable catalog, string artistToFind )
+        {
+            Console.WriteLine($"Пісні виконавця {artistToFind}:");
+            bool found = false;
+
+            foreach (DictionaryEntry entry in catalog)
+            {
+                MusicDisk disk = (MusicDisk)entry.Value;
+                foreach (Song song in disk.findAllByArtist(artistToFind))
+                {
+                    Console.WriteLine($"[{disk.getDiskName()}] {song}");
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine("Не знайдено пісень цього виконавця.");
+            }
+        }
+
+    }
+}
